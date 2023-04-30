@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1>Edit Todo</h1>
+  <form method="POST" id="todo-form">
+    {% csrf_token %}
+    <label>Title:</label>
+    <input type="text" name="title" value="{{ todo.title }}" /><br /><br />
+    <label>Description:</label>
+    <textarea name="description">{{ todo.description }}</textarea><br /><br />
+    <label>Due Date:</label>
+    <input type="date" name="due_date" id="due_date" value="{{ todo.due_date }}" /><br /><br />
+    <input type="submit" value="Save" />
+  </form>
+  <script>
+    document.getElementById('todo-form').addEventListener('submit', function(event) {
+      var dueDate = new Date(document.getElementById('due_date').value);
+      var today = new Date();
+      if (dueDate < today) {
+        event.preventDefault();
+        alert('Due date must be in the future');
+      }
+    });
+  </script>
+{% endblock %}
