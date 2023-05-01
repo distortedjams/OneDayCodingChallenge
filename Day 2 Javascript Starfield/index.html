@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+      }
+      #settings {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        padding: 10px;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 5px;
+      }
+      .hidden {
+  display: none;
+}
+    </style>
+  </head>
+<body>
+  <canvas id="myCanvas"></canvas>
+
+  <div id="settings">
+    <h2>Settings</h2>
+    <label for="speed">Speed:</label>
+    <input type="range" id="speed" name="speed" min="1" max="10.7" step="0.1" value="1"> <br><br>
+    <label for="star-amount">Star Amount:</label>
+    <input type="range" id="star-amount" name="star-amount" min="1" max="10000" step="1" value="10"><br><br>
+    <label for="star-color">Star Color:</label>
+    <input type="color" id="star-color" name="star-color" value="#ffffff"><br><br>
+  </div>
+
+  <script>
+  
+  const settings = document.getElementById("settings");
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") {
+    settings.classList.toggle("hidden");
+  }
+});
+    let speedInput = document.getElementById("speed");
+    let starAmountInput = document.getElementById("star-amount");
+    let starColorInput = document.getElementById("star-color");
+
+    starAmount = parseInt(starAmountInput.value);
+    let starColor = starColorInput.value;
+    let starSpeed = 2;
+    let starSize = 1;
+
+
+	speedInput.addEventListener("input", () => {
+    starSpeed = parseFloat(speedInput.value);
+  });
+
+  starAmountInput.addEventListener("input", () => {
+    starAmount = parseInt(starAmountInput.value);
+  });
+
+  starColorInput.addEventListener("input", () => {
+    starColor = starColorInput.value;
+  });
+  
+  starAmountInput.addEventListener("input", () => {
+  const minSliderValue = parseFloat(starAmountInput.min);
+  const maxSliderValue = parseFloat(starAmountInput.max);
+  const minStarAmount = 10;
+  const maxStarAmount = 1000;
+  const sliderValue = parseFloat(starAmountInput.value);
+  const starAmount = Math.round(((sliderValue - minSliderValue) / (maxSliderValue - minSliderValue)) * (maxStarAmount - minStarAmount) + minStarAmount);
+  const spawnDelay = 500; // 500 milliseconds
+  let spawnTimer = 0;
+  clearTimeout(spawnTimer); // reset the timer
+  spawnTimer = setTimeout(() => {
+    stars.length = 0; // remove existing stars from array
+    for (let i = 0; i < starAmount; i++) {
+      stars.push(new Star());
+    }
+  }, spawnDelay);
+});
+
+
+ let starSpawnRate = 10;
+ let maxStarSpawnDelay = 20;
+ let minStarSpawnDelay = 5;
+ 
+    function animate() {
+  // Set the background to black
+  ctx.fillStyle = "black";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  // Loop through each star and move it towards the edge
+  for (let i = stars.length - 1; i >= 0; i--) {
+    const star = stars[i];
+    const dx = star.x - canvas.width / 2;
+    const dy = star.y - canvas.height / 2;
+    const distance = Math.sqrt(dx * dx + dy * dy);
+
+    // Delay the removal of stars that are close to the edge
+    if (distance > canvas.width / 2 - star.size) {
+      star.timeOffScreen += 1 / 60;
+      if (star.timeOffScreen >= 1) {
+        stars.splice(i, 1);
+        continue;
+      }
+    } else {
+      star.timeOffScreen = 0;
+    }
+
+    const speed = starSpeed;
+    star.x += Math.cos(star.angle) * speed;
+    star.y += Math.sin(star.angle) * speed;
+    star.size = distance / (canvas.width / 2) * (5 * starSize);
+    if (star.size < 1) star.size = 1;
+
+    // Draw the star
+    ctx.beginPath();
+    ctx.arc(star.x, star.y, star.size, 0, 2 * Math.PI);
+    ctx.fillStyle = starColor;
+    ctx.fill();
+  }
+
+  // Add new stars with a random delay
+  if (stars.length < starAmount && Math.random() < starSpawnRate) {
+    setTimeout(function() {
+      stars.push(new Star());
+    }, Math.random() * (maxStarSpawnDelay - minStarSpawnDelay) + minStarSpawnDelay);
+  }
+
+  // Request the next animation frame
+  requestAnimationFrame(animate);
+}
+
+      function Star() {
+        this.x = canvas.width / 2;
+        this.y = canvas.height / 2;
+        this.size = 1;
+        this.angle = Math.random() * Math.PI * 2;
+        this.timeOffScreen = 0;
+      }
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+
+      const canvas = document.getElementById("myCanvas");
+      const ctx = canvas.getContext("2d");
+      resizeCanvas();
+
+      window.addEventListener("resize", resizeCanvas);
+
+      const stars = [];
+
+      // Start the animation
+      animate();
+      function updateStarSpeed() {
+    starSpeed = document.getElementById("star-speed").value;
+  }
+    </script>
+  </body>
+</html>
