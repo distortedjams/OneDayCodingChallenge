@@ -17,7 +17,7 @@ import java.util.SimpleTimeZone;
 
 public class WeatherApp {
 
-    private static final String API_KEY = "cb10f707e277a7e0e065e6f5d6aece89";
+    private static final String API_KEY = "API_KEY_HERE";
     private static final String API_ENDPOINT = "https://api.openweathermap.org/data/2.5/weather";
 
     public static void main(String[] args) {
