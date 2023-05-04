@@ -6,7 +6,7 @@ OpenCV 2 or later
 C++11 or later
 
 Usage
-./image-processing <input_file> [-r <width>x<height>] [output_file]
+./main <input_file> [-r <width>x<height>] [output_file]
 
 <input_file>: The path to the input image file.
 -r <width>x<height>: Resizes the image to the specified width and height.
@@ -14,10 +14,10 @@ Usage
 
 Examples
 Resize an image:
-./image-processing cat.jpg -r 300x300
+./main cat.jpg -r 300x300
 
 Resize an image and save the output to a file:
-./image-processing cat.jpg -r 300x300 output.jpg
+./main cat.jpg -r 300x300 output.jpg
 
 Limitations
 Only supports resizing images.
